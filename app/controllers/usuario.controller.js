@@ -1,4 +1,4 @@
-const Tere = require("../models/tutorial.model.js");
+const User = require("../models/usuario.model.js");
 
 // Create and Save a new Tutorial
 exports.create = (req, res) => {
@@ -10,21 +10,26 @@ exports.create = (req, res) => {
   }
 
   // Create a Tutorial
-  const tutorial = new Tere({
-    usuario:req.body.usuario,
+  const Usuario = new User({
+    NombreUsuario:req.body.NombreUsuario,
     contraseña: req.body.contraseña,
     nombre: req.body.nombre,
     apellidos: req.body.apellidos, 
+    correo:req.body.correo, 
     telefono:req.body.telefono,
-    correo:req.body.correo || false
+    carrera:req.body.carrera,
+    escuela:req.body.escuela,
+    redSocial:req.body.redSocial,
+    foto:req.body.foto,
+    rol:req.body.rol|| false
   });
 
   // Save Tutorial in the database
-  Tere.create(tutorial, (err, data) => {
+  User.create(Usuario, (err, data) => {
     if (err)
       res.status(500).send({
         message:
-          err.message || "Some error occurred while creating the Tere."
+          err.message || "Some error occurred while creating the Usuario."
       });
     else res.send(data);
   });
@@ -34,7 +39,7 @@ exports.create = (req, res) => {
 exports.findAll = (req, res) => {
   const title = req.query.title;
 
-  Tere.getAll(title, (err, data) => {
+  User.getAll(title, (err, data) => {
     if (err)
       res.status(500).send({
         message:
@@ -46,15 +51,15 @@ exports.findAll = (req, res) => {
 
 // Find a single user by user
 exports.findOne = (req, res) => {
-  Tere.findById(req.params.usuario, (err, data) => {
+  User.findById(req.params.NombreUsuario, (err, data) => {
     if (err) {
       if (err.kind === "not_found") {
         res.status(404).send({
-          message: `Not found TereBD with id ${req.params.usuario}.`
+          message: `Not found Red Social with id ${req.params.NombreUsuario}.`
         });
       } else {
         res.status(500).send({
-          message: "Error retrieving TereBD with id " + req.params.usuario
+          message: "Error retrieving RedSocial with id " + req.params.NombreUsuario
         });
       }
     } else res.send(data);
@@ -62,16 +67,16 @@ exports.findOne = (req, res) => {
 };
 
 // find all published Tutorials
-exports.findAllPublished = (req, res) => {
-  Tere.getAllPublished((err, data) => {
-    if (err)
-      res.status(500).send({
-        message:
-          err.message || "Some error occurred while retrieving tutorials."
-      });
-    else res.send(data);
-  });
-};
+// exports.findAllPublished = (req, res) => {
+//   User.getAllPublished((err, data) => {
+//     if (err)
+//       res.status(500).send({
+//         message:
+//           err.message || "Some error occurred while retrieving tutorials."
+//       });
+//     else res.send(data);
+//   });
+// };
 
 // Update a Tutorial identified by the id in the request
 exports.update = (req, res) => {
@@ -84,18 +89,18 @@ exports.update = (req, res) => {
 
   console.log(req.body);
 
-  Tere.updateById(
+  User.updateById(
     req.params.id,
-    new Tere(req.body),
+    new User(req.body),
     (err, data) => {
       if (err) {
         if (err.kind === "not_found") {
           res.status(404).send({
-            message: `Not found TereBD with id ${req.params.id}.`
+            message: `Not found Red Social with id ${req.params.id}.`
           });
         } else {
           res.status(500).send({
-            message: "Error updating TereBD with id " + req.params.id
+            message: "Error updating Red Social with id " + req.params.id
           });
         }
       } else res.send(data);
@@ -105,29 +110,29 @@ exports.update = (req, res) => {
 
 // Delete a Tutorial with the specified id in the request
 exports.delete = (req, res) => {
-  Tere.remove(req.params.usuario, (err, data) => {
+  User.remove(req.params.NombreUsuario, (err, data) => {
     if (err) {
       if (err.kind === "not_found") {
         res.status(404).send({
-          message: `Not found TereBD with id ${req.params.usuario}.`
+          message: `Not found Red Social with id ${req.params.NombreUsuario}.`
         });
       } else {
         res.status(500).send({
-          message: "Could not delete TereBD with user " + req.params.usuario
+          message: "Could not delete Red Social with user " + req.params.NombreUsuario
         });
       }
-    } else res.send({ message: `TereBD was deleted successfully! el ultimo else` });
+    } else res.send({ message: `Red Social was deleted successfully! el ultimo else` });
   });
 };
 
 // Delete all Tutorials from the database.
 exports.deleteAll = (req, res) => {
-  Tere.removeAll((err, data) => {
+  User.removeAll((err, data) => {
     if (err)
       res.status(500).send({
         message:
-          err.message || "Some error occurred while removing all tutorials."
+          err.message || "Some error occurred while removing all Users."
       });
-    else res.send({ message: `All TereBD were deleted successfully!` });
+    else res.send({ message: `All Red Social were deleted successfully!` });
   });
 };
